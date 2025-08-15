@@ -1,4 +1,4 @@
-import { MovieModel } from "../models/movieModel";
+import { MovieModel } from "../models/movieModel.js";
 
 export class moviesController{
     static async getAll (req, res){

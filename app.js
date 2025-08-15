@@ -9,8 +9,13 @@ app.disable('x-powered-by')
 app.use(json())
 app.use(corsMiddelware())
 
-app.use(moviesRouter())
+app.use('/api', moviesRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: err.message });
+});
 
 app.listen(PORT,()=>{
-    console.log(`http://localhost${PORT}`)
+    console.log(`http://localhost:${PORT}`);
 })
