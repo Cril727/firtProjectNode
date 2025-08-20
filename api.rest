@@ -17,3 +17,14 @@ Content-Type: application/json
 }
 
 ###
+PUT http://localhost:8001/api/updateMovie/62787913-7e01-11f0-9857-b0a1178f8903
+ Content-Type: application/json
+
+{
+  "title": "S",
+  "year": 2015,
+  "director": "Sai",
+  "duration": 33,
+  "poster": "https://example.com/spiderman.jpg",
+  "rate": 5.3
+}

@@ -23,37 +23,42 @@ export class MovieModel {
   //Agregar una nueva película
   static async addMovie({ input }) {
     const { title, year, director, duration, poster, rate } = input;
-
-    const [uuidResult] = await Conexion.query("SELECT UUID() uuid");
-    const [{ uuid }] = uuidResult;
+    const [[{ uuid }]] = await Conexion.promise().query(
+      "SELECT UUID() AS uuid",
+    );
 
     try {
-      await Conexion.query("START TRANSACTION");
+      await Conexion.promise().query("START TRANSACTION");
 
-      await Conexion.query(
-        `INSERT INTO
-                     movie (id, title, year, director,duration, poster,rate) 
-                     VALUES (UUID_TO_BIN("${uuid}"),?, ?, ?, ?, ?, ?)`,
-        [title, year, director, duration, poster, rate],
+      await Conexion.promise().query(
+        `INSERT INTO movie (id, title, year, director, duration, poster, rate)
+       VALUES (UUID_TO_BIN(?), ?, ?, ?, ?, ?, ?)`,
+        [uuid, title, year, director, duration, poster, rate],
       );
+
+      const [rows] = await Conexion.promise().query(
+        `SELECT BIN_TO_UUID(id) AS id, title, year, director, duration, poster, rate
+        FROM movie WHERE id = UUID_TO_BIN(?)`,
+        [uuid],
+      );
+
+      await Conexion.promise().query("COMMIT");
+
+      return rows[0];
     } catch (error) {
-      await Conexion.query("ROLLBACK")
+      await Conexion.promise().query("ROLLBACK");
       throw new Error("Error al crear la pelicula");
     }
 
-    const [movieNew] = await Conexion.query(
-      `SELECT title, year, director,duration, poster,rate,BIN_TO_UUID(id) id
-       FROM movie where id = UUID_TO_BIN(?)`,
-       [uuid]
-    );
-
-    return movieNew
   }
 
-  //
-  static async updateMovie({ id }) {
-    try {
-    } catch (error) {
-    }
+
+  static async updateMovie({ id,input }) {
+
+  }
+
+
+  static async deleteMovie({id}){
+
   }
 }
