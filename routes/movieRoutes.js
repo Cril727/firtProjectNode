@@ -9,6 +9,8 @@ const movieController = new moviesController({MovieModel})
 moviesRouter.get("/",movieController.getAll)
 moviesRouter.get("/movies",movieController.getAll)
 moviesRouter.post("/addMovie", movieController.addMovie)
+moviesRouter.put("/updateMovie/:id", movieController.updateMovie);
+moviesRouter.delete("/deleteMovie/:id", movieController.deleteMovie);
 
 return moviesRouter
 

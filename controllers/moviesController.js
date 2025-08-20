@@ -1,27 +1,29 @@
 import { validateMovie, validateUpdateMovie } from "../schemas/movie_schema.js";
 
-export class moviesController{
-
-  constructor({MovieModel}){
-    this.MovieModel = MovieModel
+export class moviesController {
+  constructor({ MovieModel }) {
+    this.MovieModel = MovieModel;
   }
 
-    //Mostrar todas las peliculas
-    getAll = async (req, res) => {
-        const {genre} = req.query
-        const movies = await this.MovieModel.getAll({genre})
-        res.json(movies)
-    }
+  //Mostrar todas las peliculas
+  getAll = async (req, res) => {
+    const { genre } = req.query;
+    const movies = await this.MovieModel.getAll({ genre });
+    res.json(movies);
+  };
 
-    //Agregar una nueva película
-    addMovie =  async(req, res) => {
+  //Agregar una nueva película
+  addMovie = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: "El cuerpo de la petición está vacío o no es JSON válido. Asegúrate de enviar Content-Type: application/json y un JSON válido." });
+      return res.status(400).json({
+        error:
+          "El cuerpo de la petición está vacío o no es JSON válido. Asegúrate de enviar Content-Type: application/json y un JSON válido.",
+      });
     }
 
-    const result = validateMovie(req.body)
+    const result = validateMovie(req.body);
 
-      if (!result.success) {
+    if (!result.success) {
       return res.status(400).json({
         error: "Datos inválidos",
         details: result.error.flatten().fieldErrors,
@@ -35,40 +37,60 @@ export class moviesController{
       console.error(error);
       res.status(500).json({ error: error.message });
     }
-
-  }
+  };
 
   //actualizar una pelicula
-  updateMovie = async(req, res)=>{
-
+  updateMovie = async (req, res) => {
     if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: "El cuerpo de la petición está vacío o no es JSON válido. Asegúrate de enviar Content-Type: application/json y un JSON válido." });
+      return res.status(400).json({
+        error:
+          "El cuerpo de la petición está vacío o no es JSON válido. Asegúrate de enviar Content-Type: application/json y un JSON válido.",
+      });
     }
 
-    const result = validateUpdateMovie(req.body)
+    const result = validateUpdateMovie(req.body);
 
-    if(!result.success){
-      return res.status(400).json({error: JSON.parse(result.error.message)})
+    if (!result.success) {
+      return res.status(400).json({
+        error: "Datos inválidos",
+        details: result.error.flatten().fieldErrors,
+      });
     }
 
-    //Recuperar el id
-    const {id}= req.params
+    const { id } = req.params;
 
-    const updateMovie = await this.MovieModel.update({id,input:result.data})
+    try {
+      const updated = await this.MovieModel.update({ id, input: result.data });
+      if (!updated) {
+        return res.status(404).json({
+          error: "Pelicula no encontrada o sin cambios",
+        });
+      }
 
-    return res.json(updateMovie)
-  }
+      return res.json(
+        {success:true,
+          message:"Pelicula actualizada correctamente",
+          pelicula:updated
+        }
+      );
 
-
-  deleteMovie = async(req, res)=>{
-    const {id} = req.params
-
-    const result = await this.MovieModel.delete({id})
-    
-    if(!result){
-      return res.status(400).json({message:"Pelicula no encontrada"})
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ error: e.message });
     }
+  };
 
-    res.json({message:"Pelicula eliminada correctamente"})
-  }
+  deleteMovie = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const ok = await this.MovieModel.delete({ id });
+      if (!ok) {
+        return res.status(404).json({ message: "Pelicula no encontrada" });
+      }
+      return res.json({ message: "Pelicula eliminada correctamente" });
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({ error: e.message });
+    }
+  };
 }

@@ -4,7 +4,7 @@ import {createMovieRouter} from "./routes/movieRoutes.js";
 import { MovieModel } from "./models/movieModel.js"; 
 import 'dotenv/config';
 
-const PORT = process.env.PORT ?? 8002
+const PORT = process.env.PORT ?? 8001
 
 const app = express()
 app.disable('x-powered-by')

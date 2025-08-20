@@ -1,10 +1,11 @@
-GET  http://localhost:8001/api/
+### Listar
+GET  http://localhost:8002/api/movies
 
-###
-GET  http://localhost:8001/api/movies?genre=Drama
+### Filtrar por género
+GET  http://localhost:8002/api/movies?genre=Drama
 
-###
-POST http://localhost:8001/api/addMovie
+### Crear
+POST http://localhost:8002/api/addMovie
 Content-Type: application/json
 
 {
@@ -16,15 +17,18 @@ Content-Type: application/json
   "rate": 5.3
 }
 
-###
-PUT http://localhost:8001/api/updateMovie/62787913-7e01-11f0-9857-b0a1178f8903
- Content-Type: application/json
+### Actualizar (parcial o total)
+PUT http://localhost:8002/api/updateMovie/f06b1f37-7e07-11f0-9857-b0a1178f8903
+Content-Type: application/json
 
 {
-  "title": "S",
-  "year": 2015,
+  "title": "Spider Reborn",
+    "year": 2015,
   "director": "Sai",
   "duration": 33,
   "poster": "https://example.com/spiderman.jpg",
-  "rate": 5.3
+  "rate": 7.9
 }
+
+### Eliminar
+DELETE http://localhost:8002/api/deleteMovie/b48c81d2-7e07-11f0-9857-b0a1178f8903
