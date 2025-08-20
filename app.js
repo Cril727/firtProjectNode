@@ -1,6 +1,7 @@
 import express, {json} from "express";
 import {corsMiddelware} from "./middleware/cors.js";
-import {moviesRouter} from "./routes/movieRoutes.js";
+import {createMovieRouter} from "./routes/movieRoutes.js";
+import { MovieModel } from "./models/movieModel.js"; 
 import 'dotenv/config';
 
 const PORT = process.env.PORT ?? 8002
@@ -10,7 +11,7 @@ app.disable('x-powered-by')
 app.use(json())
 app.use(corsMiddelware())
 
-app.use('/api', moviesRouter);
+app.use('/api', createMovieRouter({MovieModel}));
 
 app.use((err, req, res, next) => {
   console.error(err);

@@ -1,7 +1,6 @@
-import { Conexion } from "./conexion.js"
+import { Conexion } from "./conexion.js";
 
 export class MovieModel {
-
   static async getAll({ genre }) {
     let sql = "SELECT * FROM movie";
     const params = [];
@@ -22,15 +21,38 @@ export class MovieModel {
   }
 
   //Agregar una nueva película
-  static async addMovie({ title, year, director, genre, duration, poster, rate }) {
+  static async addMovie({ input }) {
+    const { title, year, director, duration, poster, rate } = input;
+
+    const [uuidResult] = await Conexion.query("SELECT UUID() uuid");
+    const [{ uuid }] = uuidResult;
+
     try {
-      const sql = "INSERT INTO movie (title, year, director,duration, poster,rate) VALUES (?, ?, ?, ?, ?, ?)";
-      const [result] = await Conexion.promise().query(sql, [title, year, director, duration, poster, rate]);
+      await Conexion.query("START TRANSACTION");
 
-      return { id: result.insertId, title, year, director, genre, duration, poster, rate };
-
+      await Conexion.query(
+        `INSERT INTO
+                     movie (id, title, year, director,duration, poster,rate) 
+                     VALUES (UUID_TO_BIN("${uuid}"),?, ?, ?, ?, ?, ?)`,
+        [title, year, director, duration, poster, rate],
+      );
     } catch (error) {
-      throw new Error("Error del servidor al agregar")
+      await Conexion.query("ROLLBACK")
+      throw new Error("Error al crear la pelicula");
+    }
+
+    const [movieNew] = await Conexion.query(
+      `SELECT title, year, director,duration, poster,rate,BIN_TO_UUID(id) id
+       FROM movie where id = UUID_TO_BIN(?)`,
+       [uuid]
+    );
+
+    return movieNew
+  }
+
+  static async updateMovie({ id }) {
+    try {
+    } catch (error) {
     }
   }
-}    
+}
