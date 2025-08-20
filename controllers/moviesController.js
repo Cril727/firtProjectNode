@@ -1,4 +1,3 @@
-import { MovieModel } from "../models/movieModel.js";
 import { validateMovie } from "../schemas/movie_schema.js";
 
 export class moviesController{
@@ -22,12 +21,15 @@ export class moviesController{
 
     const result = validateMovie(req.body)
 
-    if(result.error){
-      return res.status(400).json({error:result.error.message})
+      if (!result.success) {
+      return res.status(400).json({
+        error: "Datos inválidos",
+        details: result.error.flatten().fieldErrors,
+      });
     }
 
     try {
-      const newMovie = await MovieModel.addMovie(result);
+      const newMovie = await this.MovieModel.addMovie({input:result.data});
       res.status(201).json(newMovie);
     } catch (error) {
       console.error(error);

@@ -10,5 +10,5 @@ const movieSchema = z.object({
 })
 
 export function validateMovie(object){
-    return movieSchema.parse(object)
+    return movieSchema.safeParse(object)
 }
