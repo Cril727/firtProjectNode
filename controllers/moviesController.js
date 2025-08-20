@@ -29,7 +29,7 @@ export class moviesController{
     }
 
     try {
-      const newMovie = await this.MovieModel.addMovie({input:result.data});
+      const newMovie = await this.MovieModel.addMovie(result);
       res.status(201).json(newMovie);
     } catch (error) {
       console.error(error);

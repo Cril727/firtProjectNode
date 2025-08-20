@@ -9,6 +9,6 @@ const movieSchema = z.object({
     rate: z.number().min(0).max(10)
 })
 
-export function validateMovie(object){
-    return movieSchema.safeParse(object)
+export function validateMovie(input){
+    return movieSchema.safeParse(input)
 }

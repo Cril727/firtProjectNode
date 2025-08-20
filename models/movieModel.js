@@ -50,6 +50,7 @@ export class MovieModel {
     return movieNew
   }
 
+  //
   static async updateMovie({ id }) {
     try {
     } catch (error) {
