@@ -1,4 +1,19 @@
-http://localhost:8002/api/
+GET  http://localhost:8001/api/
 
 ###
-http://localhost:8002/api/movies?genre=Drama
+GET  http://localhost:8001/api/movies?genre=Drama
+
+###
+POST http://localhost:8001/api/addMovie
+Content-Type: application/json
+
+{
+    "title": "Sp-Man",
+    "year": 20302,
+    "director": "Sam Raimi",
+    "duration": 121,
+    "poster": "https://example.com/spiderman.jpg",
+    "rate": 1.3
+}
+
+###

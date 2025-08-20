@@ -1,6 +1,7 @@
-import express, {json} from "express"
-import {corsMiddelware} from "./middleware/cors.js"
-import {moviesRouter} from "./routes/movieRoutes.js"
+import express, {json} from "express";
+import {corsMiddelware} from "./middleware/cors.js";
+import {moviesRouter} from "./routes/movieRoutes.js";
+import 'dotenv/config';
 
 const PORT = process.env.PORT ?? 8002
 
@@ -17,5 +18,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT,()=>{
-    console.log(`http://localhost:${PORT}`);
+    console.log(`http://localhost:${PORT}/api`);
 })
